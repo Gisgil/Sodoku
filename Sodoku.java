@@ -20,43 +20,42 @@ public Sodoku () {
 }
 
 public static void main (String[] args) {
-    String inputFile = null;
-    int gridSize = 9;
-    int[][] grid = new int[gridSize][gridSize];
-
-    if (args.length > 0) {
-        inputFile = args[0];
-    } else {
+    if (args.length == 0) {
         System.out.println("Please provide file name to solve Sodoku puzzle");
         System.exit(1);
     }
+
+    String inputFile = args[0];
+
+    int gridSize = 9;
+    int[][] grid = new int[gridSize][gridSize];
+
 
     Sodoku sodoku = new Sodoku();
     sodoku.solveSodoku(inputFile, sodoku.getSodokuCSV(inputFile));
 }
 
 void solveSodoku (String fileSodoku, int[][] grid) {
-    if (isInputValid(0, 0, grid)) {
-        if (isSolved(0, 0, grid)) {
-            System.out.println("Sodoku puzzle has been solve!");
-            toFile(grid, getFilePath(fileSodoku));
-        } else {
-            System.out.println("Unable to solve sodoku problem");
-        }
-    } else {
+    if (!isInputValid(0, 0, grid)) {
         System.out.println("Invalid Input. Please check input puzzle in the file.");
+        System.exit(1);
     }
+
+    if (!isSolved(0, 0, grid)) {
+        System.out.println("Unable to solve sodoku problem");
+        System.exit(1);
+    }
+
+    System.out.println("Sodoku puzzle has been solve!");
+    toFile(grid, getFilePath(fileSodoku));
 }
 
 String getFilePath (String fileSodoku) {
-    File inFile = null;
-
     //get file path to place solved sodoku file
-    inFile = new File(fileSodoku);
+    File inFile = new File(fileSodoku);
     String absoluteFilePath = inFile.getAbsolutePath();
-    String filePath = absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf(File.separator));
 
-    return filePath;
+    return absoluteFilePath.substring(0, absoluteFilePath.lastIndexOf(File.separator));
 }
 
 boolean isSolved (int col, int row, int[][] grid) {
